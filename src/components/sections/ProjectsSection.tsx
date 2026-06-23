@@ -17,7 +17,7 @@ import { cn } from "@/lib/utils";
 import type { Project } from "@/types";
 
 const PAGE_SIZE = 4;
-const PREVIEW_LENGTH = 120;
+const PREVIEW_LENGTH = 90;
 
 type ProjectCardProps = {
   project: Project;
@@ -43,44 +43,48 @@ function ProjectCard({ project, expanded, index, onToggle }: ProjectCardProps) {
         <button
           type="button"
           onClick={onToggle}
-          className="flex w-full flex-col items-center p-6 text-left"
+          className="grid min-h-[22rem] w-full grid-rows-6 p-0 text-left sm:min-h-[24rem]"
           aria-expanded={expanded}
         >
-          <div className="mb-3 flex h-16 w-16 items-center justify-center overflow-hidden rounded-full bg-theme/20">
+          <div className="relative row-span-4 overflow-hidden bg-theme/20">
             {project.image_url ? (
               <Image
                 src={project.image_url}
                 alt={getPlainFormattedPreview(project.title, 80)}
-                width={64}
-                height={64}
-                className="h-full w-full object-cover"
+                fill
+                sizes="(max-width: 768px) 100vw, 50vw"
+                className="object-cover"
               />
             ) : (
-              <DynamicIcon
-                name={project.icon}
-                className="h-8 w-8 text-theme-light"
-              />
+              <div className="flex h-full w-full items-center justify-center">
+                <DynamicIcon
+                  name={project.icon}
+                  className="h-12 w-12 text-theme-light sm:h-14 sm:w-14"
+                />
+              </div>
             )}
           </div>
 
-          <FormattedTextDisplay
-            stored={project.title}
-            className="mb-2 font-semibold text-white"
-            strongClassName="font-bold text-white"
-          />
+          <div className="row-span-2 flex flex-col px-5 pb-4 pt-3">
+            <FormattedTextDisplay
+              stored={project.title}
+              className="line-clamp-2 font-semibold leading-snug text-white"
+              strongClassName="font-bold text-white"
+            />
 
-          {!expanded ? (
-            <p className="text-center text-sm text-gray-400">
-              {getPlainFormattedPreview(project.description, PREVIEW_LENGTH)}
-            </p>
-          ) : null}
+            {!expanded ? (
+              <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-gray-400">
+                {getPlainFormattedPreview(project.description, PREVIEW_LENGTH)}
+              </p>
+            ) : null}
 
-          <ChevronDown
-            className={cn(
-              "mt-4 h-5 w-5 text-gray-400 transition-transform",
-              expanded && "rotate-180",
-            )}
-          />
+            <ChevronDown
+              className={cn(
+                "mt-auto self-center pt-2 h-5 w-5 text-gray-400 transition-transform",
+                expanded && "rotate-180",
+              )}
+            />
+          </div>
         </button>
 
         <AnimatePresence initial={false}>
